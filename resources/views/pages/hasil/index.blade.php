@@ -46,7 +46,6 @@ $bobot = [0.2, 0.2, 0.2, 0.2, 0.1, 0.1];
                 </thead>
                 <tbody>
                     @foreach ($employees as $employee)
-<<<<<<< HEAD
                         <tr>
                             <td>C{{ $loop->iteration}}</td>
                             <td>{{ $employee->absensi }}</td>
@@ -56,17 +55,6 @@ $bobot = [0.2, 0.2, 0.2, 0.2, 0.1, 0.1];
                             <td>{{ $employee->peringatan }}</td>
                             <td>{{ $employee->kinerja }}</td>
                         </tr>
-=======
-                    <tr>
-                        <td>{{ $employee->name }}</td>
-                        <td>{{ $employee->absensi }}</td>
-                        <td>{{ $employee->kebersihan }}</td>
-                        <td>{{ $employee->loyalitas }}</td>
-                        <td>{{ $employee->perilaku }}</td>
-                        <td>{{ $employee->peringatan }}</td>
-                        <td>{{ $employee->kinerja }}</td>
-                    </tr>
->>>>>>> 0b31705f4ed740fe8b72c17461865b46d23e0563
                     @endforeach
                 </tbody>
             </table>
@@ -90,7 +78,6 @@ $bobot = [0.2, 0.2, 0.2, 0.2, 0.1, 0.1];
                 </thead>
                 <tbody>
                     @foreach ($employees as $employee)
-<<<<<<< HEAD
                         <tr>
                             <td>C{{ $loop->iteration }}</td>
                             <td>{{ $employee->absensi_normalized }}</td>
@@ -100,17 +87,6 @@ $bobot = [0.2, 0.2, 0.2, 0.2, 0.1, 0.1];
                             <td>{{ $employee->peringatan_normalized }}</td>
                             <td>{{ $employee->kinerja_normalized }}</td>
                         </tr>
-=======
-                    <tr>
-                        <td>{{ $employee->name }}</td>
-                        <td>{{ $employee->absensi_normalized }}</td>
-                        <td>{{ $employee->kebersihan_normalized }}</td>
-                        <td>{{ $employee->loyalitas_normalized }}</td>
-                        <td>{{ $employee->perilaku_normalized }}</td>
-                        <td>{{ $employee->peringatan_normalized }}</td>
-                        <td>{{ $employee->kinerja_normalized }}</td>
-                    </tr>
->>>>>>> 0b31705f4ed740fe8b72c17461865b46d23e0563
                     @endforeach
                 </tbody>
             </table>

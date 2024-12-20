@@ -54,8 +54,7 @@ class HasilController extends Controller
             $totalKinerja += $employee->kinerja_normalized;
             
             $total_normalized_score = $employee->absensi_normalized + $employee->kebersihan_normalized + $employee->loyalitas_normalized + $employee->perilaku_normalized + $employee->peringatan_normalized + $employee->kinerja_normalized;
-            echo '<br>';
-            print_r(round($total_normalized_score));
+            
             $employee->total_normalized_score = $total_normalized_score;
         }
         
@@ -90,6 +89,7 @@ class HasilController extends Controller
             'E' => 20,
             default => 0,
         };
+
         return $gradeToNumber;
     }
 
