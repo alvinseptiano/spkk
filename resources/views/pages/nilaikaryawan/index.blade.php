@@ -60,16 +60,20 @@
                                     <x-dropdown-grade :value="$employee->absensi" :column="'absensi'" :id="$employee->id" />
                                 </td>
                                 <td>
-                                    <x-dropdown-grade :value="$employee->kebersihan" :column="'kebersihan'" :id="$employee->id" />
+                                    <x-dropdown-grade :value="$employee->kebersihan" :column="'kebersihan'"
+                                        :id="$employee->id" />
                                 </td>
                                 <td>
-                                    <x-dropdown-grade :value="$employee->loyalitas" :column="'loyalitas'" :id="$employee->id" />
+                                    <x-dropdown-grade :value="$employee->loyalitas" :column="'loyalitas'"
+                                        :id="$employee->id" />
                                 </td>
                                 <td>
-                                    <x-dropdown-grade :value="$employee->perilaku" :column="'perilaku'" :id="$employee->id" />
+                                    <x-dropdown-grade :value="$employee->perilaku" :column="'perilaku'"
+                                        :id="$employee->id" />
                                 </td>
                                 <td>
-                                    <x-dropdown-grade :value="$employee->peringatan" :column="'peringatan'" :id="$employee->id" />
+                                    <x-dropdown-grade :value="$employee->peringatan" :column="'peringatan'"
+                                        :id="$employee->id" />
                                 </td>
                                 <td>
                                     <x-dropdown-grade :value="$employee->kinerja" :column="'kinerja'" :id="$employee->id" />

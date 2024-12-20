@@ -9,41 +9,37 @@
             default => 'btn-outline',
         };
     @endphp
-    <button onclick="openModal{{ $id }}()" class="btn mx-auto {{$color}}">{{ $value }}</button>
-
-    <form action="{{ route('nilaikaryawan.update', $id) }}" method="POST" class="text-center">
+    <button onclick="openModal('{{ $id }}_{{ $column }}')" class="btn mx-auto {{$color}}">{{ $value }}</button>
+    <form action="{{ route('nilaikaryawan.update', [$id, $column]) }}" method="POST" class="text-center">
         @csrf
         @method('PATCH')
         <!-- Modal -->
-        <div id="modal{{ $id }}" class="fixed inset-0 bg-gray-500 bg-opacity-75 hidden z-50">
+        <div id="modal{{ $id }}_{{ $column }}" class="fixed inset-0 bg-gray-500 bg-opacity-75 hidden z-50">
             <input type="hidden" name="column" value="{{ $column }}">
-            <label>{{ $column }}</label>
             <div class="flex items-center justify-center min-h-screen">
                 <div class="bg-white rounded-lg p-6 w-64">
-                    <h3 class="text-lg font-bold mb-4">Pilih Grade {{$column }}</h3>
+                    <h3 class="text-lg font-bold mb-4">Pilih Grade {{ $column }}</h3>
                     <div class="grid grid-cols-5 gap-2">
                         @foreach(['A', 'B', 'C', 'D', 'E'] as $grade)
-                            <button type="submit" class="btn btn-sm w-full" onclick="document.getElementById('grade{{ $id }}').value = '{{ $grade }}'">
+                            <button type="submit" class="btn btn-sm w-full"
+                                onclick="document.getElementById('grade{{ $id }}_{{ $column }}').value = '{{ $grade }}'">
                                 {{ $grade }}
                             </button>
                         @endforeach
                     </div>
-                    <input type="hidden" id="grade{{ $id }}" name="value" value="">
-                    <button type="button" onclick="closeModal{{ $id }}()" class="btn btn-sm btn-outline mt-4 w-full">Close</button>
+                    <input type="hidden" id="grade{{ $id }}_{{ $column }}" name="value" value="">
+                    <button type="button" onclick="closeModal('{{ $id }}_{{ $column }}')"
+                        class="btn btn-sm btn-outline mt-4 w-full">Close</button>
                 </div>
             </div>
         </div>
     </form>
 </div>
-
-
 <script>
-    function openModal{{ $id }}() {
-        document.getElementById('modal{{ $id }}').classList.remove('hidden');
+    function openModal(id) {
+        document.getElementById('modal' + id).classList.remove('hidden');
     }
-
-    function closeModal{{ $id }}() {
-        document.getElementById('modal{{ $id }}').classList.add('hidden');
+    function closeModal(id) {
+        document.getElementById('modal' + id).classList.add('hidden');
     }
 </script>
-</div>

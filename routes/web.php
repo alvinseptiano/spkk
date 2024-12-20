@@ -21,7 +21,7 @@ Route::middleware(['role:admin,manager'])->group(function () {
     Route::put('/listkaryawan/{id}/update', [karyawanController::class, 'update'])->name('listkaryawan.update');
     Route::delete('/listkaryawan/{id}/destroy', [karyawanController::class, 'destroy'])->name('listkaryawan.destroy');
     Route::get('/addgrade/{id}', [KaryawanController::class, 'showAddGradeForm'])->name('employees.showAddGradeForm');
-    Route::patch('/nilaikaryawan/{id}/update', [KaryawanController::class, 'updateGrade'])->name('nilaikaryawan.update');
+    Route::patch('/nilaikaryawan/{id}/{column}/update', [KaryawanController::class, 'updateGrade'])->name('nilaikaryawan.update');
     Route::get('/listkaryawansearch', [KaryawanController::class, 'search'])->name('listkaryawansearch');
     Route::get('/nilaikaryawansearch', [KaryawanController::class, 'search'])->name('nilaikaryawansearch');
 

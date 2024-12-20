@@ -79,7 +79,7 @@ class KaryawanController extends Controller
         return view('pages.listkaryawan.edit', compact('employee'));
     }
 
-    public function updateGrade(Request $request, $id)
+    public function updateGrade(Request $request, $id, $column)
     {
         $validatedData = $request->validate([
             'column' => 'required', // Add allowed columns
@@ -87,8 +87,8 @@ class KaryawanController extends Controller
         ]);
 
         $employee = User::findOrFail($id);
-        $msg = "Berhasil update user {$validatedData['column']} {$validatedData['value']} {$employee->name}, id {$id}";
-        $employee->{$validatedData['column']} = $validatedData['value'];
+        $msg = "Berhasil update user {$column} {$validatedData['value']} {$employee->name}, id {$id}";
+        $employee->{$column} = $validatedData['value'];
         $employee->save();
 
         return redirect()->back()->with('success', $msg);
