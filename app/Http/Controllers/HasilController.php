@@ -11,11 +11,8 @@ class HasilController extends Controller
     {
         $employees = User::all();
         $v1 = $v2 = $v3 = $v4 = $v5 = $v6 = 0;
-<<<<<<< HEAD
-        $totalAbsensi = $totalKebersihan = $totalLoyalitas = $totalPerilaku = $totalPeringatan = $totalKinerja = 0;
-=======
+
         $total_normalized_score = $totalAbsensi = $totalKebersihan = $totalLoyalitas = $totalPerilaku = $totalPeringatan = $totalKinerja = 0;
->>>>>>> 0b31705f4ed740fe8b72c17461865b46d23e0563
         $min = $max = 1;
 
         foreach ($employees as $employee) {
@@ -26,14 +23,7 @@ class HasilController extends Controller
             $employee->peringatan = $this->convertToGrade($employee->peringatan);
             $employee->kinerja = $this->convertToGrade($employee->kinerja);
 
-<<<<<<< HEAD
-            $max = (int) max($employee->absensi, $employee->kebersihan, $employee->loyalitas, $employee->perilaku, $employee->peringatan, $employee->kinerja);
-            $min = (int) min($employee->absensi, $employee->kebersihan, $employee->loyalitas, $employee->perilaku, $employee->peringatan, $employee->kinerja);
-            $max = max(1, $max);
-            $min = max(1, $min);
 
-            $absensi_cb = $employee->absensi / $max;
-=======
             $max = (float) max($employee->absensi, $employee->kebersihan, $employee->loyalitas, $employee->perilaku, $employee->peringatan, $employee->kinerja);
             $min = (float) min($employee->absensi, $employee->kebersihan, $employee->loyalitas, $employee->perilaku, $employee->peringatan, $employee->kinerja);    
             $max = max(1, $max);
@@ -41,14 +31,12 @@ class HasilController extends Controller
 
             // Cost & Benefit
             $absensi_cb =  $employee->absensi / max(1, $max);
->>>>>>> 0b31705f4ed740fe8b72c17461865b46d23e0563
             $kebersihan_cb = $employee->kebersihan / $max;
             $loyalitas_cb = $employee->loyalitas / $max;
             $perilaku_cb = $employee->perilaku / $max;
             $peringatan_cb = $min / $employee->peringatan;
             $kinerja_cb = $employee->kinerja / $max;
 
-<<<<<<< HEAD
             $employee->absensi_normalized = number_format($this->calculateNormalizedScore($absensi_cb, 0.2), 3);
             $employee->kebersihan_normalized = number_format($this->calculateNormalizedScore($kebersihan_cb, 0.2), 3);
             $employee->loyalitas_normalized = number_format($this->calculateNormalizedScore($loyalitas_cb, 0.2), 3);
@@ -58,16 +46,6 @@ class HasilController extends Controller
 
             $employee->total_normalized_score = $this->calculateTotalNormalizedScore($employee->absensi_normalized, $employee->kebersihan_normalized, $employee->loyalitas_normalized, $employee->perilaku_normalized, $employee->peringatan_normalized, $employee->kinerja_normalized);
 
-=======
-            // Normalisasi
-            $employee->absensi_normalized = $absensi_cb * 0.2;
-            $employee->kebersihan_normalized = $kebersihan_cb * 0.2;
-            $employee->loyalitas_normalized = $loyalitas_cb * 0.2;
-            $employee->perilaku_normalized = $perilaku_cb * 0.2;
-            $employee->peringatan_normalized = $peringatan_cb * 0.1;
-            $employee->kinerja_normalized = $kinerja_cb * 0.1;
-            
->>>>>>> 0b31705f4ed740fe8b72c17461865b46d23e0563
             $totalAbsensi += $employee->absensi_normalized;
             $totalKebersihan += $employee->kebersihan_normalized;
             $totalLoyalitas += $employee->loyalitas_normalized;
@@ -97,13 +75,8 @@ class HasilController extends Controller
         
         $sortedEmployees = $employees->sortByDesc('total_normalized_score');
         $top3Employees = $sortedEmployees->take(3);
-<<<<<<< HEAD
-
-        return view('pages.hasil.index', compact('employees', 'top3Employees', 'top3Absensi', 'top3Kebersihan', 'top3Loyalitas', 'top3Perilaku', 'top3Peringatan', 'top3Kinerja', 'avgAbsensi', 'avgKebersihan', 'avgLoyalitas', 'avgPerilaku', 'avgPeringatan', 'avgKinerja'));
-=======
         
         return view('pages.hasil.index', compact('employees', 'top3Employees', 'top3Absensi', 'top3Kebersihan', 'top3Loyalitas', 'top3Perilaku', 'top3Peringatan', 'top3Kinerja', 'avgAbsensi','avgKebersihan', 'avgLoyalitas', 'avgPerilaku', 'avgPeringatan', 'avgKinerja'));
->>>>>>> 0b31705f4ed740fe8b72c17461865b46d23e0563
     }
 
 
@@ -111,10 +84,10 @@ class HasilController extends Controller
     {
         $gradeToNumber = match($grade) {
             'A' => 100,
-            'B' => 90,
-            'C' => 80,
-            'D' => 70,
-            'E' => 60,
+            'B' => 80,
+            'C' => 60,
+            'D' => 40,
+            'E' => 20,
             default => 0,
         };
         return $gradeToNumber;

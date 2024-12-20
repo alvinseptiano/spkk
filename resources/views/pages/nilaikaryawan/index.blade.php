@@ -57,7 +57,6 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td class="font-bold uppercase">{{ $employee->name }}</td>
                                 <td>
-<<<<<<< HEAD
                                     <x-dropdown-grade :value="$employee->absensi" :column="'absensi'" :id="$employee->id" />
                                 </td>
                                 <td>
@@ -89,37 +88,6 @@
                     </tbody>
                 </table>
             </div>
-=======
-                                    <button>Hello</button>
-                                    <div href="{{ route('employees.showAddGradeForm', $employee->id) }}" class="btn btn-primary"
-                                        class="btn btn-primary">Ubah Nilai</a>
-                                        <!-- <a href="{{ route('employees.showAddGradeForm', $employee->id) }}" -->
-                                        <!-- class="btn btn-primary">Tambah Nilai</a> -->
-                                </td>
-                            </tr>
-                        @endforeach
-                    @else
-                        @foreach($results as $result)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $result->name }}</td>
-                                <!-- <td>{{ $result->dob }}</td> -->
-                                <!-- <td>{{ $result->role }}</td> -->
-                                <td>{{ $result->absensi }}</td>
-                                <td>{{ $result->kebersihan }}</td>
-                                <td>{{ $result->loyalitas }}</td>
-                                <td>{{ $result->perilaku }}</td>
-                                <td>{{ $result->peringatan }}</td>
-                                <td>{{ $result->kinerja }}</td>
-                                <td> <a href="{{ route('employees.showAddGradeForm', $result->id) }}"
-                                        class="btn btn-primary">Ubah Nilai</a>
-                                </td>
-                            </tr>
-                        @endforeach
-                    @endif
-                </tbody>
-            </table>
->>>>>>> 0b31705f4ed740fe8b72c17461865b46d23e0563
         </div>
     </div>
 
