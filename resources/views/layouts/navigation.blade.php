@@ -6,9 +6,11 @@
 
         <div class="navbar-center hidden lg:flex">
             <ul class="menu menu-horizontal px-1 text-xl">
+            @if(Auth::user()->role === 'admin' || Auth::user()->role === 'manager')
                 <li><a href="listkaryawan">List Karyawan</a></li>
                 <li><a href="nilaikaryawan">Nilai Karyawan</a></li>
-                <li><a href="profile">Profil</a></li>
+            @endif
+            <li><a href="profile">Profil</a></li>
             </ul>
         </div>
 
