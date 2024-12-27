@@ -57,7 +57,7 @@
                                 id="role">1
                                 <option value="admin">Admin</option>
                                 <option value="manager">Manager</option>
-                                <option value="karyawan">karyawan</option>
+                                <option value="karyawan">Karyawan</option>
                             </select>
                         </div>
                     </div>

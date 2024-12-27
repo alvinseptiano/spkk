@@ -2,7 +2,8 @@
     <x-toast />
     <div class="container pt-3">
         <h1 class="text-center font-extrabold text-xl md:text-2xl">List Karyawan</h1>
-        <div class="container flex justify-end items-center pt-4">
+
+        <div class="mt-8 container flex justify-end items-center pt-4">
             <div class="flex justify-start items-center ml-3 mr-10">
                 <form action="{{ route('listkaryawansearch') }}" method="GET">
                     <input type="hidden" name="view" value="{{ 'biokaryawan' }}">
