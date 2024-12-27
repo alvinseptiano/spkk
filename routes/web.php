@@ -25,10 +25,10 @@ Route::middleware(['role:admin,manager'])->group(function () {
     Route::get('/listkaryawansearch', [KaryawanController::class, 'search'])->name('listkaryawansearch');
     Route::get('/nilaikaryawansearch', [KaryawanController::class, 'search'])->name('nilaikaryawansearch');
     Route::get('/nilaikaryawan', [KaryawanController::class, 'index'])->name('nilaikaryawan.index');
-    Route::get('/hasilakhir', [HasilController::class, 'index'])->name('hasil.index');
 });
 
 Route::middleware('auth')->group(function () {
+    Route::get('/hasilakhir', [HasilController::class, 'index'])->name('hasil.index');
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
