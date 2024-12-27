@@ -15,7 +15,7 @@
                 <tbody>
                     <?php 
                     $kriteria = ["Absensi", "Kebersihan", "Loyalitas", "Perilaku", "Peringatan", "Kinerja"];
-$atribut = ["Benefit", "Benefit", "Benefit", "Benefit", "Cost", "Benefit"];
+$atribut = ["Benefit", "Benefit", "Benefit", "Benefit", "Benefit", "Benefit"];
 $bobot = [0.2, 0.2, 0.2, 0.2, 0.1, 0.1];
                     ?>
                     @for ($i = 0; $i < 6; $i++)
