@@ -34,6 +34,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/nilaikaryawan', [KaryawanController::class, 'index'])->name('nilaikaryawan.index');
     Route::get('/hasilakhir', [HasilController::class, 'index'])->name('hasil.index');
+    Route::get('/logout', [ProfileController::class, 'logout'])->name('logout');
 });
 
 require __DIR__.'/auth.php';

@@ -23,12 +23,8 @@
                     </div>
                     <div class="md:flex md:items-center mb-6">
                         <div class="md:w-1/3">
-<<<<<<< HEAD:resources/views/pages/listkaryawan/edit.blade.php
                             <label for="dob"
                                 class="block  font-bold md:text-right mb-1 md:mb-0 pr-4">
-=======
-                            <label for="dob" class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">
->>>>>>> 0b31705f4ed740fe8b72c17461865b46d23e0563:resources/views/pages/addkaryawan/edit.blade.php
                                 Tanggal Lahir
                             </label>
                         </div>
@@ -38,9 +34,7 @@
                     </div>
                     <div class="md:flex md:items-center mb-6">
                         <div class="md:w-1/3">
-<<<<<<< HEAD:resources/views/pages/listkaryawan/edit.blade.php
                             <label for="position" class="block  font-bold md:text-right mb-1 md:mb-0 pr-4">
-=======
                             <label for="email" class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">
                                 E-Mail
                             </label>
@@ -52,7 +46,6 @@
                     <div class="md:flex md:items-center mb-6">
                         <div class="md:w-1/3">
                             <label for="role" class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">
->>>>>>> 0b31705f4ed740fe8b72c17461865b46d23e0563:resources/views/pages/addkaryawan/edit.blade.php
                                 Jabatan
                             </label>
                         </div>

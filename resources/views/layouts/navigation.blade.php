@@ -16,10 +16,11 @@
             <div class="dropdown dropdown-end">
                 <div tabindex="0" role="button" class="btn btn-outline rounded-btn">{{ Auth::user()->name }}</div>
                 <ul tabindex="0" class="menu dropdown-content bg-base-100 rounded-box z-[1] mt-4 w-52 p-2 shadow">
-                    <li><a>Profil</a></li>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <li><a type="submit">Logout</a></li>
+                        <li>
+                            <button type="submit" class="w-full text-left">Logout</button>
+                        </li>
                     </form>
                 </ul>
             </div>
