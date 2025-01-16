@@ -8,8 +8,19 @@
             'E' => 'btn-error',
             default => 'btn-outline',
         };
+
+        // Determine if the button should be disabled
+        $isDisabled =
+            ($adminRole === 'admin' && $role !== 'karyawan') || // Admins can only edit 'employee' column
+            ($adminRole !== 'manager' && $adminRole !== 'admin') // Others cannot edit
+        ;
     @endphp
-    <button onclick="openModal('{{ $id }}_{{ $column }}')" class="btn mx-auto {{$color}}">{{ $value }}</button>
+
+    <button onclick="openModal('{{ $id }}_{{ $column }}')" class="btn mx-auto {{$color}}" @if($isDisabled) disabled
+    @endif>
+        {{ $value }}
+    </button>
+
     <form action="{{ route('nilaikaryawan.update', [$id, $column]) }}" method="POST" class="text-center">
         @csrf
         @method('PATCH')
@@ -22,19 +33,23 @@
                     <div class="grid grid-cols-5 gap-2">
                         @foreach(['A', 'B', 'C', 'D', 'E'] as $grade)
                             <button type="submit" class="btn btn-sm w-full"
-                                onclick="document.getElementById('grade{{ $id }}_{{ $column }}').value = '{{ $grade }}'">
+                                onclick="document.getElementById('grade{{ $id }}_{{ $column }}').value = '{{ $grade }}'"
+                                @if($isDisabled) disabled @endif>
                                 {{ $grade }}
                             </button>
                         @endforeach
                     </div>
                     <input type="hidden" id="grade{{ $id }}_{{ $column }}" name="value" value="">
                     <button type="button" onclick="closeModal('{{ $id }}_{{ $column }}')"
-                        class="btn btn-sm btn-outline mt-4 w-full">Close</button>
+                        class="btn btn-sm btn-outline mt-4 w-full">
+                        Close
+                    </button>
                 </div>
             </div>
         </div>
     </form>
 </div>
+
 <script>
     function openModal(id) {
         document.getElementById('modal' + id).classList.remove('hidden');

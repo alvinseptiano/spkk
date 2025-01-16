@@ -24,7 +24,10 @@ class KaryawanController extends Controller
             $employees = User::where('name', 'LIKE', "%{$query}%")->orWhere('id', 'LIKE', "%{$query}%")->get();
         }
 
-        // Check the route name and return appropriate view
+        if (!$employees) {
+            $employees = '';
+        }
+
         if ($routeName === 'listkaryawansearch') {
             return view('pages.listkaryawan.index', compact('employees'));
         } elseif ($routeName === 'nilaikaryawansearch') {
@@ -51,11 +54,13 @@ class KaryawanController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'dob' => 'required|date',
+            'dob' => 'required|date|before_or_equal:' . Carbon::now()->subYears(18)->format('Y-m-d'),
+        ], [
+            'dob.before_or_equal' => 'You must be 18 or older to access this site.',
             'role' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
         ]);
-        
+
         // Convert the date string to a Carbon instance
         $dobCarbon = Carbon::parse($request->dob);
 

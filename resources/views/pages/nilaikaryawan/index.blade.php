@@ -1,3 +1,9 @@
+<?php
+    use Illuminate\Support\Facades\Auth;
+
+    $user = Auth::user();
+
+?>
 <x-app-layout>
     <x-toast />
 
@@ -57,26 +63,27 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td class="font-bold uppercase">{{ $employee->name }}</td>
                                 <td>
-                                    <x-dropdown-grade :value="$employee->absensi" :column="'absensi'" :id="$employee->id" />
+                                    <x-dropdown-grade :value="$employee->absensi" :column="'absensi'" :id="$employee->id" :role="$employee->role" :adminRole="$user->role" />
                                 </td>
                                 <td>
-                                    <x-dropdown-grade :value="$employee->kebersihan" :column="'kebersihan'"
+                                    <x-dropdown-grade :value="$employee->kebersihan" :column="'kebersihan'" :role="$employee->role" :adminRole="$user->role"
                                         :id="$employee->id" />
                                 </td>
                                 <td>
-                                    <x-dropdown-grade :value="$employee->loyalitas" :column="'loyalitas'"
+                                    <x-dropdown-grade :value="$employee->loyalitas" :column="'loyalitas'" :role="$employee->role" :adminRole="$user->role"
                                         :id="$employee->id" />
                                 </td>
                                 <td>
-                                    <x-dropdown-grade :value="$employee->perilaku" :column="'perilaku'"
+                                    <x-dropdown-grade :value="$employee->perilaku" :column="'perilaku'" :role="$employee->role" :adminRole="$user->role"
                                         :id="$employee->id" />
                                 </td>
                                 <td>
-                                    <x-dropdown-grade :value="$employee->peringatan" :column="'peringatan'"
+                                    <x-dropdown-grade :value="$employee->peringatan" :column="'peringatan'" :role="$employee->role" :adminRole="$user->role"
                                         :id="$employee->id" />
                                 </td>
                                 <td>
-                                    <x-dropdown-grade :value="$employee->kinerja" :column="'kinerja'" :id="$employee->id" />
+                                    <x-dropdown-grade :value="$employee->kinerja" :column="'kinerja'" :id="$employee->id" :role="$employee->role" :adminRole="$user->role" />
+
                                 </td>
                                 <td>
                                     <form action="{{ route('listkaryawan.destroy', $employee->id) }}" method="POST"
@@ -113,6 +120,8 @@
                     }, 3000); // Wait 1 minute
                 }
             });
+            
+            if
         </script>
     @endpush
 </x-app-layout>

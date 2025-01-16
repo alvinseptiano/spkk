@@ -33,6 +33,12 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        // $request->validate([
+        //     'dob' => 'required|date|before_or_equal:' . Carbon::now()->subYears(18)->format('d-m-Y'),
+        // ], [
+        //     'dob.before_or_equal' => 'You must be 18 or older to access this site.',
+        // ]);
+
         $request->authenticate();
 
         $request->session()->regenerate();

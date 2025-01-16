@@ -1,16 +1,18 @@
 <nav x-data="{ open: false }" class="w-full bg-accent shadow rounded-xl mt-5 px-2 mb-5">
     <div class="navbar">
         <div class="navbar-start">
-            <a class="btn btn-ghost text-xl" href="/"> <img src="{{asset("img/logo.png")}}" class="h-12">Pondok Indah Golf</a>
+            <a class="btn btn-ghost" href="/"> <img src="{{asset("img/logo.png")}}" class="h-12">Pondok Indah Golf</a>
         </div>
 
         <div class="navbar-center hidden lg:flex">
-            <ul class="menu menu-horizontal px-1 text-xl">
-            @if(Auth::user()->role === 'admin' || Auth::user()->role === 'manager')
-                <li><a href="listkaryawan">List Karyawan</a></li>
-                <li><a href="nilaikaryawan">Nilai Karyawan</a></li>
-            @endif
-            <li><a href="profile">Profil</a></li>
+            <ul class="menu menu-horizontal px-1">
+                @if(Auth::user()->role === 'admin' || Auth::user()->role === 'manager')
+                    <li><a href="/listkaryawan">List Karyawan</a></li>
+                    <li><a href="/nilaikaryawan">Nilai Karyawan</a></li>
+                    <li><a href="/kriteria">Kriteria</a></li>
+                    <li><a href="/subkriteria">Sub Kriteria</a></li>
+                @endif
+                <li><a href="profile">Profil</a></li>
             </ul>
         </div>
 

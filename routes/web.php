@@ -25,6 +25,8 @@ Route::middleware(['role:admin,manager'])->group(function () {
     Route::get('/listkaryawansearch', [KaryawanController::class, 'search'])->name('listkaryawansearch');
     Route::get('/nilaikaryawansearch', [KaryawanController::class, 'search'])->name('nilaikaryawansearch');
     Route::get('/nilaikaryawan', [KaryawanController::class, 'index'])->name('nilaikaryawan.index');
+    Route::get('/kriteria', [KaryawanController::class, 'index'])->name('kriteria');
+    Route::get('/subkriteria', [KaryawanController::class, 'index'])->name('subkriteria');
 });
 
 Route::middleware('auth')->group(function () {
@@ -35,4 +37,4 @@ Route::middleware('auth')->group(function () {
     Route::get('/logout', [ProfileController::class, 'logout'])->name('logout');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
