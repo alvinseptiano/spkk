@@ -21,7 +21,7 @@ Route::get('/home', function () {
 })->name('homepage');
 
 // Route::middleware('auth', 'role:admin,manager')->group(function () {
-Route::middleware(['auth', 'role:admin,manager'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Home');
     })->name('dashboard');
