@@ -2,159 +2,260 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Criteria;
+use App\Models\SubCriteria;
+use App\Models\Score;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Redirect;
 
 class KaryawanController extends Controller
 {
-    public function search(Request $request)
-    {
-        $routeName = $request->route()->getName();
-
-        $query = $request->input('query'); // Get the search query
-        $employees = [];
-
-        if (empty($query)) {
-            // If the search query is empty, retrieve all data
-            $employees = User::all();
-            $query = "";
-        } else {
-            // If a search query is provided, filter the results
-            $employees = User::where('name', 'LIKE', "%{$query}%")->orWhere('id', 'LIKE', "%{$query}%")->get();
-        }
-
-        if (!$employees) {
-            $employees = '';
-        }
-
-        if ($routeName === 'listkaryawansearch') {
-            return view('pages.listkaryawan.index', compact('employees'));
-        } elseif ($routeName === 'nilaikaryawansearch') {
-            return view('pages.nilaikaryawan.index', compact('employees'));
-        }
-        // Fallback view if route is not recognized
-        return redirect()->back()->with('success', $employees);
-    }
-
     public function index(Request $request)
     {
-        $routeName = $request->route()->getName();
-        $employees = User::all();
 
-        return view("pages.{$routeName}", compact('employees'));
-    }
-
-    public function create()
-    {
-        return view('pages.listkaryawan.create');
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'dob' => 'required|date|before_or_equal:' . Carbon::now()->subYears(18)->format('Y-m-d'),
-        ], [
-            'dob.before_or_equal' => 'You must be 18 or older to access this site.',
-            'role' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-        ]);
+        // Extract type and data from request
+        $formData = $request->data;
+        $type = $request->type;
+        $rules = [];
 
-        // Convert the date string to a Carbon instance
-        $dobCarbon = Carbon::parse($request->dob);
+        if ($type == 'alternative') {
+            $rules = [
+                'name' => 'required|string|max:255',
+                'email' => 'required|email',
+                'dob' => 'required|date',
+                'role' => 'required',
+            ];
+            $model = User::class;
 
-        // Remove hyphens and format the date
-        $pass = str_replace('-', '', $dobCarbon->format('dmY'));
+            // Set the password as the same as the date of birth
+            if (!empty($formData['dob'])) {
+                $formData['password'] = bcrypt($formData['dob']);
+            }
+        } elseif ($type == 'criteria') {
+            $rules = [
+                'name' => 'required|string|max:255',
+                'weight' => 'required|numeric|min:0|max:100',
+                'attribute' => 'required|string|max:100'
+            ];
+            $model = Criteria::class;
+        } elseif ($type == 'subcriteria') {
+            $rules = [
+                'name' => 'required|string|max:255',
+                'value' => 'required|numeric|min:0|max:100',
+            ];
+            $model = SubCriteria::class;
+        } else {
+            return Redirect::back()
+                ->with('error', 'Invalid type specified');
+        }
 
-        User::create([
-            'name' => $request->name,
-            'dob' => $dobCarbon, // Save as Carbon instance if your database field accepts it
-            'role' => $request->role,
-            'email' => $request->email,
-            'password' => $pass,
-        ]);
+        try {
+            $validator = Validator::make($formData, $rules);
 
-        return redirect()->route('listkaryawan.index')->with('success', 'Data Karyawan Berhasil Ditambahkan');
+            if ($validator->fails()) {
+                return Redirect::back()
+                    ->withErrors($validator)
+                    ->with('error', 'Validation failed');
+            }
+
+            // Create data based on type
+            $model::create($formData);
+
+            return Redirect::back()
+                ->with('refresh', true)
+                ->with('message', 'Item berhasil ditambah');
+        } catch (\Exception $e) {
+            return Redirect::back()
+                ->with('error', 'An error occurred: ' . $e->getMessage());
+        }
     }
 
-    public function edit($id)
+    public function show()
     {
-        $employee = User::findOrFail($id);
-        return view('pages.listkaryawan.edit', compact('employee'));
+        try {
+            $data = [
+                'criteria' => Criteria::all(),
+                'alternative' => User::all(),
+                'subcriteria' => Subcriteria::with('criteria')->get(),
+                'score' => Score::all(),
+            ];
+
+            return response()->json([
+                'success' => true,
+                'refresh' => true,
+                'data' => $data,
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'refresh' => true,
+                'message' => 'Error fetching data: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
-    public function updateGrade(Request $request, $id, $column)
+    public function update(Request $request)
+    {
+        $type = $request->type;
+        $rules = [];
+
+        if ($type == 'alternative') {
+            $rules = [
+                'data.id' => 'required|exists:users,id',
+                'data.name' => 'required|string|max:255',
+            ];
+            $model = User::class;
+        } elseif ($type == 'criteria') {
+            $rules = [
+                'data.id' => 'required|exists:criterias,id',
+                'data.name' => 'required|string|max:255',
+                'data.weight' => 'required|numeric|min:0|max:100',
+                'data.attribute' => 'required|string|max:100',
+            ];
+            $model = Criteria::class;
+        } elseif ($type == 'subcriteria') {
+            $rules = [
+                'data.id' => 'required|exists:sub_criterias,id',
+                'data.name' => 'required|string|max:255',
+                'data.value' => 'required|numeric|min:0|max:100',
+            ];
+            $model = SubCriteria::class;
+        } else {
+            return Redirect::back()
+                ->with('message', 'Invalid type specified');
+        }
+
+        $validatedData = $request->validate($rules);
+
+        // Find the model by ID
+        $item = $model::findOrFail($validatedData['data']['id']);
+
+        // Update the model with validated data
+        $item->update($validatedData['data']);
+
+        return Redirect::back()
+            ->with('refresh', true)
+            ->with('message', 'Item berhasil diupdate');
+    }
+
+
+    public function destroy(string $type, string $id)
+    {
+        try {
+            $model = match ($type) {
+                'criteria' => new Criteria(),
+                'alternative' => new User(),
+                'subcriteria' => new Subcriteria(),
+                default => throw new \Exception('Invalid type specified')
+            };
+            $item = $model::findOrFail($id);
+            $item->delete();
+
+            return Redirect::back()
+                ->with('refresh', true)
+                ->with('message', 'Item berhasil dihapus');
+        } catch (ModelNotFoundException $e) {
+            return Redirect::back()
+                ->with('refresh', true)
+                ->with('message', 'Data tidak ditemukan');
+        } catch (\Exception $e) {
+            return Redirect::back()
+                ->with('refresh', true)
+                ->with('message', 'Invalid type specified');
+        }
+    }
+
+    public function getSubCriteria()
+    {
+        // Fetch customers along with their orders
+        $criteria = Criteria::with('subcriteria')->get();
+
+        // Return data as JSON
+        return response()->json($criteria);
+    }
+
+    public function addSubCriteria(Request $request, $criteria_id)
     {
         $validatedData = $request->validate([
-            'column' => 'required', // Add allowed columns
-            'value' => 'required'
+            // 'data.id' => 'required|exists:criteria,id',
+            // 'type' => 'required|string|in:subcriteria',
+            // 'data' => 'required|array',
+            'data.id' => 'required|integer',
+            'data.name' => 'required|string|max:255',
+            'data.value' => 'required|integer',
         ]);
 
-        $employee = User::findOrFail($id);
-        $msg = "Berhasil update user {$column} {$validatedData['value']} {$employee->name}, id {$id}";
-        $employee->{$column} = $validatedData['value'];
-        $employee->save();
+        try {
+            $criteria = Criteria::findOrFail($criteria_id);
 
-        return redirect()->back()->with('success', $msg);
+            $criteria->subcriteria()->create([
+                'criteria_id' => $criteria_id,
+                'name' => $validatedData['data']['name'],
+                'value' => $validatedData['data']['value']
+            ]);
+
+            return Redirect::back()
+                ->with('refresh', true)
+                ->with('message', 'Item berhasil ditambah');
+        } catch (\Exception $e) {
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to create subcriteria',
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+
+            return redirect()->back()
+                ->with('error', 'Failed to create subcriteria: ' . $e->getMessage())
+                ->with('refresh', true);
+        }
     }
 
-    public function update(Request $request, $id)
+    public function addScore(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'dob' => 'required|date',
-            'role' => 'required|string|max:255',
-        ]);
+        try {
+            $validated = $request->validate([
+                'alternative_id' => 'required|exists:users,id',
+                'criteria_id' => 'required|exists:criterias,id', // Changed from criterion_id
+                'value' => 'required|numeric'
+            ]);
 
-        $employee = User::findOrFail($id);
-        $employee->update([
-            'name' => $request->full_name,
-            'dob' => $request->date_of_birth,
-            'role' => $request->position,
-        ]);
+            Score::updateOrCreate(
+                [
+                    'alternative_id' => $validated['alternative_id'],
+                    'criteria_id' => $validated['criteria_id'] // Changed from criterion_id
+                ],
+                ['value' => $validated['value']]
+            );
 
-        return redirect()->route('listkaryawan.index')->with('success', 'Data Karyawan Berhasil Diperbaharui');
+            return Redirect::back()
+                ->with('refresh', true)
+                ->with('message', 'Item berhasil ditambah');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Failed to create subcriteria: ' . $e->getMessage())
+                ->with('refresh', true);
+        }
     }
 
-    public function destroy($id)
+    public function getScore()
     {
-        $employee = User::findOrFail($id);
-        $employee->delete();
-        return redirect()->route('listkaryawan.index')->with('success', 'Data Karyawan Berhasil Dihapus');
-    }
+        $data = [
+            'criteria' => Criteria::all(),
+            'alternative' => User::all(),
+            'subcriteria' => Subcriteria::all(),
+            'scores' => Score::all()
+        ];
 
-    public function showAddGradeForm($id)
-    {
-        $employee = User::findOrFail($id);
-        return view('pages.nilaikaryawan.addgrade', compact('employee'));
-    }
-
-    public function addGrade(Request $request)
-    {
-        $query = $request->input('query'); // Get the search query
-        $employees = $results = [];
-        $request->validate([
-            'id' => 'required|exists:employees,id',
-            'dob' => 'nullable|date',
-            'role' => 'nullable|string',
-            'absensi' => 'nullable|string|max:2',
-            'kebersihan' => 'nullable|string|max:2',
-            'loyalitas' => 'nullable|string|max:2',
-            'perilaku' => 'nullable|string|max:2',
-            'peringatan' => 'nullable|string|max:2',
-            'kinerja' => 'nullable|string|max:2',
-        ]);
-
-        $employee = User::find($request->id);
-        $employee->absensi = $request->absensi;
-        $employee->kebersihan = $request->kebersihan;
-        $employee->loyalitas = $request->loyalitas;
-        $employee->perilaku = $request->perilaku;
-        $employee->peringatan = $request->peringatan;
-        $employee->kinerja = $request->kinerja;
-        $employee->save();
-
-        return redirect()->route('nilaikaryawan.index')->with('success', 'Nilai Grade Berhasil Ditambahkan');
+        return response()->json(['data' => $data]);
     }
 }

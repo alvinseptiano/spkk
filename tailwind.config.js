@@ -1,19 +1,22 @@
+import forms from '@tailwindcss/forms';
+import defaultTheme from 'tailwindcss/defaultTheme';
+import tailwindcss from '@tailwindcss/vite';
+
 /** @type {import('tailwindcss').Config} */
 export default {
     content: [
-        "./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php",
-        "./storage/framework/views/*.php",
-        "./resources/views/**/*.blade.php",
-        "./src/**/*.{vue,js,ts,jsx,tsx}",
-        // './resources/**/*.blade.php',
-        // './resources/**/*.js',
-        // './resources/**/*.vue',
+        './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
+        './storage/framework/views/*.php',
+        './resources/views/**/*.blade.php',
+        './resources/js/**/*.vue',
     ],
+
     theme: {
-        extend: {},
+        extend: {
+            fontFamily: {
+                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+            },
+        },
     },
-    daisyui: {
-        themes: ["light", "dark", "valentine", "lemonade", "coffee"],
-    },
-    plugins: [require("daisyui")],
+    plugins: [forms, tailwindcss()],
 };

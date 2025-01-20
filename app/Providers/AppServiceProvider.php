@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Blade;
 
 class AppServiceProvider extends ServiceProvider
 {
-    
+    /**
+     * Register any application services.
+     */
     public function register(): void
     {
         //
@@ -18,8 +20,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Blade::if('role', function (...$roles) {
-            return auth()->check() && in_array(auth()->user()->role, $roles);
-        });
+        Vite::prefetch(concurrency: 3);
     }
 }

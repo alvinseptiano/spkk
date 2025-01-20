@@ -4,28 +4,24 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Requests\Auth\RegisterRequest;
-use App\Providers\RouteServiceProvider;
-use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\View\View;
-use Illuminate\Support\Facades\Hash;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class AuthenticatedSessionController extends Controller
 {
     /**
      * Display the login view.
      */
-    public function login(): View
+    public function create(): Response
     {
-        return view('auth.login');
-    }
-    public function register(): View
-    {
-        return view('auth.register');
+        return Inertia::render('Auth/Login', [
+            'canResetPassword' => Route::has('password.request'),
+            'status' => session('status'),
+        ]);
     }
 
     /**
@@ -33,17 +29,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        // $request->validate([
-        //     'dob' => 'required|date|before_or_equal:' . Carbon::now()->subYears(18)->format('d-m-Y'),
-        // ], [
-        //     'dob.before_or_equal' => 'You must be 18 or older to access this site.',
-        // ]);
-
         $request->authenticate();
 
         $request->session()->regenerate();
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        return redirect()->intended(route('dashboard', absolute: false));
     }
 
     /**
@@ -58,26 +48,5 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
-    }
-
-    public function add(RegisterRequest $request): RedirectResponse
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string',
-            'dob' => 'required|date',
-        ]);
-        // Convert the 'dob' to MySQL format (YYYY-MM-DD)
-        $dob = Carbon::parse($request->dob)->format('Y-m-d');
-
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'dob' => $dob,
-        ]);
-
-        return redirect()->route('login')->with('success', 'account-registered');
     }
 }
